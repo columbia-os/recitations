@@ -4,7 +4,7 @@
 > former OS TA. The original posts can be found
 > [here](https://mgouzenko.github.io/jekyll/update/2016/11/04/the-linux-process-scheduler.html).
 >
-> The code snippets and links in this post correspond to Linux v5.10.158.
+> The code snippets and links in this post correspond to Linux v5.10.205 for 2024 Spring.
 
 ## Introduction
 
@@ -96,7 +96,7 @@ later.
 
 The scheduler is not really this simple; the runqueue is defined in the kernel
 as `struct rq`, and you can take a peek at its definition
-[here](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/sched.h#L897).
+[here](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/sched.h#L897).
 Spoiler alert: it's not a linked list! To be fair, the explanation that I gave
 above more or less describes the very first Linux runqueue. But over the years,
 the scheduler evolved to incorporate multiple scheduling algorithms. These
@@ -385,7 +385,7 @@ Each of these functions are passed the task to be enqueued/dequeued, as well as
 the runqueue it should be added to/removed from. In addition, these functions
 are given a bit vector of flags that describe *why* enqueue or dequeue is being
 called. Here are the various flags, which are described in
-[sched.h](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/sched.h#L1743):
+[sched.h](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/sched.h#L1744):
 
 ```c
 /*
@@ -446,7 +446,7 @@ is, the task specified by `p`) back in the RB tree.
 
 The sched_class's `put_prev_task` is called by the function `put_prev_task()`,
 which is
-[defined](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/sched.h#L1841)
+[defined](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/sched.h#L1842)
 in `sched.h`. `put_prev_task()` gets called in the core scheduler's
 `pick_next_task()`, after the policy-specific `pick_next_task()` implementation
 is called, but before any context switch is performed. This gives us an
@@ -475,7 +475,7 @@ timer interrupt happens, and its job is to perform bookeeping and set the
 `need_resched` flag if the currently-running process needs to be preempted:
 
 The `need_resched` flag can be set by the function `resched_curr()`,
-[found](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/core.c#L608)
+[found](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L608)
 in core.c:
 
 ```c
@@ -520,15 +520,15 @@ You can check *why* `select_task_rq` was called by looking at `sd_flag`.
 For instance, `sd_flag == SD_BALANCE_FORK` whenever `select_task_rq()` is called
 to determine the CPU of a newly forked task. You can find all possible values of
 `sd_flag`
-[here](https://elixir.bootlin.com/linux/v5.10.158/source/include/linux/sched/sd_flags.h).
+[here](https://elixir.bootlin.com/linux/v5.10.205/source/include/linux/sched/sd_flags.h).
 
 Note that `select_task_rq()` should return a CPU that `p` is allowed to run on.
 Each `task_struct` has a
-[member](https://elixir.bootlin.com/linux/v5.10.158/source/include/linux/sched.h#L728)
+[member](https://elixir.bootlin.com/linux/v5.10.205/source/include/linux/sched.h#L728)
 called `cpus_mask`, of type `cpumask_t`. This member represents the task's CPU
 affinity - i.e. which CPUs it can run on. It's possible to iterate over these
 CPUs with the macro `for_each_cpu()`, defined
-[here](https://elixir.bootlin.com/linux/v5.10.158/source/include/linux/cpumask.h#L263).
+[here](https://elixir.bootlin.com/linux/v5.10.205/source/include/linux/cpumask.h#L263).
 
 ### `set_next_task()`
 
@@ -562,7 +562,7 @@ void yield_task(struct rq *rq);
 
 `yield_task()` is used when the current process voluntarily yields its remaining
 time on the CPU. Its implementation is usually very simple, as you can see in
-[rt](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/rt.c#L1434),
+[rt](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/rt.c#L1434),
 which simply requeues the current task.
 
 This function is called when a process calls the `sched_yield()` syscall to
@@ -704,9 +704,9 @@ static inline void check_class_changed(struct rq *rq, struct task_struct *p,
 parameters.
 
 For scheduler classes like
-[rt](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/rt.c#L2303)
+[rt](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/rt.c#L2305)
 and
-[dl](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/deadline.c#L2456),
+[dl](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/deadline.c#L2462),
 the main consideration when a task's policy changes to their policy is that it
 could overload their runqueue. They then try to push some tasks to other
 runqueues.
