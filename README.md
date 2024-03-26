@@ -5,9 +5,6 @@ This repository contains the recitation notes for Columbia's Operating Systems I
 class, COMSW4118, as taught by Jae Woo Lee. For information about the class,
 visit the [course homepage](http://cs4118.github.io/www/2024-1/).
 
-These recitations are held every other week by the various TAs, generally using
-these notes/linked resources as the basis for their sections.
-
 Issues, patches, and comments, especially by current and former students, are
 welcome.
 
@@ -24,7 +21,8 @@ welcome.
 - [Note E.1](E-Freezer/freezer.md): Linux scheduler data structures, implementing
   a scheduler (hw6)
 - [Note E.2](E-Freezer/freezer_sched_class.md): Linux scheduler series
+<!--
 - [Note F](F-Farfetchd/index.md): Linux page table data structures,
   macros/functions (hw7)
 - [Note G](G-Pantry): Linux page cache, implementing a file system (hw8)
-  
+-->
