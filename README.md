@@ -21,4 +21,4 @@ welcome.
 - [Note E.1](E-Freezer/freezer.md): Linux scheduler data structures, implementing
   a scheduler (hw6)
 - [Note E.2](E-Freezer/freezer_sched_class.md): What does each `sched_class` function do?
-- [Note E.3](E-Freezer/freezer_runqueue.md): How are `sched_class` functions invoked in response to an event (timer interrupt, task sleeps, task finishes execution)?
+- [Note E.3](E-Freezer/freezer_runqueue.md): How are `sched_class` functions invoked in response to an event (task is preempted, task voluntarily yields, task finishes execution)?
