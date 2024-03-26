@@ -236,7 +236,7 @@ fields of the struct by name in an initializer. This notation is also called
 initializers](http://gcc.gnu.org/onlinedocs/gcc/Designated-Inits.html). Also,
 not every function needs to be implemented. You will need to figure out what is
 and is not necessary. To see an example of a bare minimum scheduler, see the
-[idle_sched_class](https://elixir.bootlin.com/linux/v5.10.158/source/kernel/sched/idle.c#L487),
+[idle_sched_class](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/idle.c#L487),
 which is the scheduling policy used when no other tasks are ready to be
 executed.
 
