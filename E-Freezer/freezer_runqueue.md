@@ -21,7 +21,8 @@ is the Freezer runqueue modified in response to different events?
 - When a task's timeslice is up, freezer's `task_tick()` implementation is
   responsible for modifying the freezer runqueue.
 - When a task voluntarily yields the CPU / finishes its execution, freezer's
-  `dequeue_task()` implementation is responsible for modifying the runqueue.
+  `dequeue_task()` implementation is responsible for modifying the freezer
+  runqueue.
 
 ## When a task's timeslice is up
 
@@ -29,12 +30,12 @@ is the Freezer runqueue modified in response to different events?
 - This function invokes [`curr->sched_class->task_tick()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L4021).
 - Freezer's `task_tick()` implementation should decrement the current task's
   timeslice. (Note that the timeslice should therefore use jiffies as the unit.)
-- Freezer's `task_tick()` implementation should move the current task to the end
-  of the runqueue if its timeslice is down to 0. At this point, the task is
-  still running on the CPU! We've just modified its position on the runqueue.
-- Freezer's `task_tick()` implementation should call [`resched_curr()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L608), which sets the
-  `TIF_NEED_RESCHED` flag. Again, at this point, the task is still running on the
-  CPU!
+- If the current task's timeslice is down to 0:
+    - Freezer's `task_tick()` implementation should move the current task to the
+      end of the runqueue. At this point, the task is still running on the CPU!
+      We've just modified its position on the runqueue.
+    - Freezer's `task_tick()` implementation should call [`resched_curr()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L608), which
+      sets the `TIF_NEED_RESCHED` flag. Again, at this point, the task is still running on the CPU!
 - The kernel checks `TIF_NEED_RESCHED` on interrupt and userspace return paths.
   When it's safe (e.g. the process isn't holding any spinlocks), the kernel
   calls [`schedule()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L4619), which in turn invokes [`__schedule()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L4430).
@@ -45,9 +46,9 @@ is the Freezer runqueue modified in response to different events?
 
 ## When a task voluntarily sleeps, e.g. because it's waiting for something
 
-- The task calls the [`sched_yield` syscall](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L6120), which in turn invokes ['do_sched_yield()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L6103).
+- The task calls the [`sched_yield` syscall](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L6120), which in turn invokes [`do_sched_yield()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L6103).
 - `do_sched_yield` calls [`current->sched_class->yield_task()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L6111). Freezer's `yield_task()` implementation should set the timeslice of the current task to 0, but this doesn't actually matter in this case (at least, I think it doesn't ...).
-- `do_sched_yield`  also calls `schedule`, which in turn calls `__schedule()`.
+- `do_sched_yield`  also calls `schedule()`, which in turn calls `__schedule()`.
   Note that `__schedule()` is called with `false` as an argument. See [here](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L4626).
 - Recall that the `task_struct` has a [`state` field](https://elixir.bootlin.com/linux/v5.10.205/source/include/linux/sched.h#L653). In this case, the `state` field of
   the `task_struct` is no longer `RUNNABLE`, i.e. it is non-zero. This is
@@ -57,7 +58,7 @@ is the Freezer runqueue modified in response to different events?
 - Since `state` is non-zero and since the `preempt` argument was `false` as
   mentioned above, we go into this [if block](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L4483).
 - This in turn calls `deactivate_task()` [here](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L4506).
-- `deactivate_task()` calls [`dequeue_task()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L1588), which in turn calls the `dequeue_task` implementation of the current scheduling class.
+- `deactivate_task()` calls [`dequeue_task()`](https://elixir.bootlin.com/linux/v5.10.205/source/kernel/sched/core.c#L1588), which in turn calls the `dequeue_task()` implementation of the current scheduling class.
 - Freezer's `dequeue_task()` implementation should remove the current task from
   the freezer runqueue.
 - Recall that we're still within an earlier invocation of `__schedule()`.
