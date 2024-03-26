@@ -2,8 +2,8 @@ cs4118 Recitations
 ==================
 
 This repository contains the recitation notes for Columbia's Operating Systems I
-class, COMSW4118, as taught by Jae Woo Lee. For information about the class,
-visit the [course homepage](http://cs4118.github.io/www/2024-1/).
+class, COMSW4118, as taught by Jae Woo Lee and Kostis Kaffes. For information
+about the class, visit the [course homepage](http://cs4118.github.io/www/2024-1/).
 
 Issues, patches, and comments, especially by current and former students, are
 welcome.
@@ -20,5 +20,5 @@ welcome.
 - [Note D.2 Diagram](D-Fridge/kkv.alex.png): Diagram of a possible fridge infrastructure
 - [Note E.1](E-Freezer/freezer.md): Linux scheduler data structures, implementing
   a scheduler (hw6)
-- [Note E.2](E-Freezer/freezer_sched_class.md): Linux scheduler series
-
+- [Note E.2](E-Freezer/freezer_sched_class.md): What does each `sched_class` function do?
+- [Note E.3](E-Freezer/freezer_runqueue.md): How are `sched_class` functions invoked in response to an event (timer interrupt, task sleeps, task finishes execution)?
