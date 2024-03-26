@@ -1,5 +1,13 @@
 # Implementing a scheduling class
 
+> This guide describes the data structures used for implementing a scheduling
+> class. To understand how these data structures are used, you can find more
+> specific information [here](./freezer_sched_class.md) and
+> [here](./freezer_runqueue.md). The first guide goes through the `sched_class`
+> functions one by one. The second guide shows how these functions are invoked
+> from an event-driven perspective (e.g. what happens on a timer interrupt? what
+> happens when a process is done executing?).
+
 ## Introduction
 
 One of the reasons students struggle with this assignment boils down to a lack

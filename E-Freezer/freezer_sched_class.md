@@ -1,4 +1,4 @@
-# Linux Scheduler Series
+# Freezer sched_class
 
 > This guide is adapted from a blog series written by Mitchell Gouzenko, a
 > former OS TA. The original posts can be found
