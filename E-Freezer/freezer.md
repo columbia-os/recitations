@@ -57,8 +57,7 @@ The solution is to create a new structure containing the `list_head` and any
 bookkeeping variables. Then, we can include just the wrapper structure in the
 `struct rq`. Linux includes these structures in `linux/kernel/sched/sched.h`.
 
-By convention, Linux scheduler-specific wrapper structures are named `struct
-<sched_class>_rq`. For example, the CFS class defines a `struct cfs_rq` which is
+By convention, Linux scheduler-specific wrapper structures are named `struct <sched_class>_rq`. For example, the CFS class defines a `struct cfs_rq` which is
 then declared inside of `struct rq` as `struct cfs_rq cfs`.
 
 The following snippet is taken from `linux/kernel/sched/sched.h`:
